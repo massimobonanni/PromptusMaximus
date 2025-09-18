@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Set Credential": {
+      "commandName": "Project",
+      "commandLineArgs": "set credential --token testtoken"
+    }
+  }
+}

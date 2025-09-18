@@ -11,6 +11,9 @@ internal class SetCommand : CommandBase
     {
         this.Subcommands.Add(new SetCredentialCommand(serviceProvider));
         this.Subcommands.Add(new SetClearCommand(serviceProvider));
+        this.Subcommands.Add(new SetLanguageCommand(serviceProvider));
+        this.Subcommands.Add(new SetModelCommand(serviceProvider));
+        this.Subcommands.Add(new SetShowCommand(serviceProvider));
     }
 
 }

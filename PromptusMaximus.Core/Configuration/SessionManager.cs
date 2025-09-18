@@ -222,7 +222,7 @@ public class SessionManager
     /// Sets the language setting for the current session.
     /// </summary>
     /// <param name="language">The language identifier.</param>
-    public void SetLanguage(string language)
+    public void SetLanguage(Languages language)
     {
         _currentSettings.Language = language;
     }

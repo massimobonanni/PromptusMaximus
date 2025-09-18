@@ -7,6 +7,22 @@
     "Set Credential": {
       "commandName": "Project",
       "commandLineArgs": "set credential --token testtoken"
+    },
+    "Set Language": {
+      "commandName": "Project",
+      "commandLineArgs": "set language --language it"
+    },
+    "Set Model": {
+      "commandName": "Project",
+      "commandLineArgs": "set model --model openai/gpt-5-mini"
+    },
+    "Set Clear": {
+      "commandName": "Project",
+      "commandLineArgs": "set clear"
+    },
+    "Set Show": {
+      "commandName": "Project",
+      "commandLineArgs": "set show"
     }
   }
 }

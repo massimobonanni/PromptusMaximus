@@ -20,6 +20,9 @@ jobs:
         id: inference
         uses: actions/ai-inference@v1
         with:
+          model: mistral-ai/mistral-small-2503
+          system-prompt: |
+            You are an AI assistant that summarizes GitHub issues.
           prompt: |
             Summarize the following GitHub issue in one paragraph:
             Title: ${{ github.event.issue.title }}

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11012.143 main
+VisualStudioVersion = 18.0.11012.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PromptusMaximus.Console", "PromptusMaximus.Console\PromptusMaximus.Console.csproj", "{63E5C98F-C39C-41D3-8868-AD0936CB4C38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PromptusMaximus.Core", "PromptusMaximus.Core\PromptusMaximus.Core.csproj", "{A8F3762A-A461-46FC-9C24-0C5F6A505FE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubModels.Client", "GitHubModels.Client\GitHubModels.Client.csproj", "{6000C064-2840-4B43-BB87-DC3F44C26E1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A8F3762A-A461-46FC-9C24-0C5F6A505FE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F3762A-A461-46FC-9C24-0C5F6A505FE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F3762A-A461-46FC-9C24-0C5F6A505FE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6000C064-2840-4B43-BB87-DC3F44C26E1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6000C064-2840-4B43-BB87-DC3F44C26E1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6000C064-2840-4B43-BB87-DC3F44C26E1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6000C064-2840-4B43-BB87-DC3F44C26E1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

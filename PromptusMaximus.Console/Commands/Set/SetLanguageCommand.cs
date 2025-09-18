@@ -5,7 +5,7 @@ namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetLanguageCommand : CommandBase
 {
-    public SetLanguageCommand(ServiceProvider serviceProvider = null) :
+    public SetLanguageCommand(ServiceProvider serviceProvider) :
         base("language", "Set default language", serviceProvider)
     {
         var languageOption = new Option<Core.Configuration.Languages>(name: "--language")

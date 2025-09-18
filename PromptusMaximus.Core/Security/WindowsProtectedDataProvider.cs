@@ -23,8 +23,10 @@ public class WindowsProtectedDataProvider : IProtectedDataProvider
         {
             byte[]? entropy = optionalEntropy != null ? 
                 System.Text.Encoding.UTF8.GetBytes(optionalEntropy) : null;
-            
+
+#pragma warning disable CA1416 // Validate platform compatibility
             var protectedData = ProtectedData.Protect(data, entropy, DataProtectionScope.CurrentUser);
+#pragma warning restore CA1416 // Validate platform compatibility
             return Task.FromResult(protectedData);
         }
         catch (PlatformNotSupportedException)
@@ -48,8 +50,10 @@ public class WindowsProtectedDataProvider : IProtectedDataProvider
         {
             byte[]? entropy = optionalEntropy != null ? 
                 System.Text.Encoding.UTF8.GetBytes(optionalEntropy) : null;
-            
+
+#pragma warning disable CA1416 // Validate platform compatibility
             var unprotectedData = ProtectedData.Unprotect(encryptedData, entropy, DataProtectionScope.CurrentUser);
+#pragma warning restore CA1416 // Validate platform compatibility
             return Task.FromResult(unprotectedData);
         }
         catch (PlatformNotSupportedException)

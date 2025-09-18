@@ -5,7 +5,7 @@ namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetClearCommand : CommandBase
 {
-    public SetClearCommand(ServiceProvider serviceProvider = null) :
+    public SetClearCommand(ServiceProvider serviceProvider) :
         base("clear", "Clear settings (also credentials)", serviceProvider)
     {
         this.SetAction(CommandHandler);

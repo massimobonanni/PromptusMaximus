@@ -5,7 +5,7 @@ namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetModelCommand : CommandBase
 {
-    public SetModelCommand(ServiceProvider serviceProvider = null) :
+    public SetModelCommand(ServiceProvider serviceProvider) :
         base("model", "Set default model", serviceProvider)
     {
         var modelOption = new Option<string>(name: "--model")

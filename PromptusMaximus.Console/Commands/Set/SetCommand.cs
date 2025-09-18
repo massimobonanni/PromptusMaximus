@@ -6,7 +6,7 @@ namespace PromptusMaximus.Console.Commands;
 
 internal class SetCommand : CommandBase
 {
-    public SetCommand(ServiceProvider serviceProvider = null) :
+    public SetCommand(ServiceProvider serviceProvider) :
         base("set", "Configure session settings", serviceProvider)
     {
         this.Subcommands.Add(new SetCredentialCommand(serviceProvider));

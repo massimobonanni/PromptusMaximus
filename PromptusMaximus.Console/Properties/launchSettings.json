@@ -23,6 +23,10 @@
     "Set Show": {
       "commandName": "Project",
       "commandLineArgs": "set show"
+    },
+    "Models List": {
+      "commandName": "Project",
+      "commandLineArgs": "models list"
     }
   }
 }

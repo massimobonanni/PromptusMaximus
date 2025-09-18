@@ -5,7 +5,7 @@ namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetCredentialCommand : CommandBase
 {
-    public SetCredentialCommand(ServiceProvider serviceProvider = null) :
+    public SetCredentialCommand(ServiceProvider serviceProvider) :
         base("credential", "Set authentication credentials", serviceProvider)
     {
         var tokenOption = new Option<string>(name: "--token")

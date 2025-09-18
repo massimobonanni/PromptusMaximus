@@ -50,7 +50,7 @@ public class LinuxProtectedDataProvider : IProtectedDataProvider
         return msPlain.ToArray();
     }
 
-    private async Task<byte[]> GenerateKeyAsync(string? optionalEntropy)
+    private Task<byte[]> GenerateKeyAsync(string? optionalEntropy)
     {
         // Create a deterministic key based on user identity and machine
         var keyMaterial = new StringBuilder();
@@ -70,6 +70,6 @@ public class LinuxProtectedDataProvider : IProtectedDataProvider
             100000, // Iterations
             HashAlgorithmName.SHA256);
 
-        return pbkdf2.GetBytes(KeySize);
+        return Task.FromResult(pbkdf2.GetBytes(KeySize));
     }
 }

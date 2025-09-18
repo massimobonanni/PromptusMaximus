@@ -1,14 +1,14 @@
-# 🏛️ Gitus Ridiculus
+# 🏛️ Promptus Maximus
 
 **Speak like Caesar. Complain like Cicero. Debug like a gladiator.**
 
-Welcome to **Gitus Ridiculus**, the most unnecessarily dramatic language demo this side of the Rubicon. Powered by GitHub-hosted LLMs and fueled by fake Latin, this app takes your mundane modern phrases and reimagines them as epic proclamations worthy of the Roman Senate.
+Welcome to **Promptus Maximus**, the most unnecessarily dramatic language demo this side of the Rubicon. Powered by GitHub-hosted LLMs and fueled by fake Latin, this app takes your mundane modern phrases and reimagines them as epic proclamations worthy of the Roman Senate.
 
 ---
 
 ## 🤔 What Is This?
 
-Gitus Ridiculus is a satirical translation engine that turns everyday expressions into theatrical, Latin-inspired nonsense. Whether you're stuck in traffic or rage-pushing to `main`, our LLMs will elevate your suffering to imperial poetry.
+Promptus Maximus is a satirical translation engine that turns everyday expressions into theatrical, Latin-inspired nonsense. Whether you're stuck in traffic or rage-pushing to `main`, our LLMs will elevate your suffering to imperial poetry.
 
 > “My code won’t compile.”  
 > → *By Jupiter’s beard! The sacred scrolls of logic refuse to obey—debuggus maximus is upon us!*

@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>PromptusMaximus</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>PromptusMaximus</ToolCommandName>
   </PropertyGroup>
 
   <ItemGroup>

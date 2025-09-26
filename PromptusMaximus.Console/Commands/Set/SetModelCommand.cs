@@ -4,8 +4,16 @@ using System.CommandLine;
 
 namespace PromptusMaximus.Console.Commands.Set;
 
+/// <summary>
+/// Command for setting the default AI model used in the session.
+/// Provides functionality to configure which GitHub Model will be used for AI operations.
+/// </summary>
 internal class SetModelCommand : CommandBase
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetModelCommand"/> class.
+    /// </summary>
+    /// <param name="sessionManager">The session manager instance for handling configuration persistence.</param>
     public SetModelCommand(ISessionManager sessionManager) :
         base("model", "Set default model", sessionManager)
     {
@@ -20,6 +28,13 @@ internal class SetModelCommand : CommandBase
         this.SetAction(CommandHandler);
     }
 
+    /// <summary>
+    /// Handles the execution of the set model command.
+    /// Loads current settings, updates the model configuration, and saves the changes.
+    /// </summary>
+    /// <param name="parseResult">The parsed command line arguments containing the model value.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous command execution operation.</returns>
     private async Task CommandHandler(ParseResult parseResult, CancellationToken cancellationToken)
     {
         var model = parseResult.GetValue<string>("--model");

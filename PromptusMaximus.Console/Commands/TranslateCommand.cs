@@ -6,10 +6,22 @@ using PromptusMaximus.Core.Interfaces;
 
 namespace PromptusMaximus.Console.Commands;
 
+/// <summary>
+/// Command for translating text using AI models with Roman-style translation capabilities.
+/// Supports multiple models and provides formatted output with loading indicators.
+/// </summary>
 internal class TranslateCommand : CommandBase
 {
+    /// <summary>
+    /// Service for interacting with AI models to perform text completions and translations.
+    /// </summary>
     private readonly IModelsService _modelsService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TranslateCommand"/> class.
+    /// </summary>
+    /// <param name="sessionManager">The session manager for handling user settings and authentication.</param>
+    /// <param name="modelsService">The service for interacting with AI models.</param>
     public TranslateCommand(ISessionManager sessionManager, IModelsService modelsService) :
         base("translate", "Translate a sentence as a Roman", sessionManager)
     {
@@ -35,6 +47,22 @@ internal class TranslateCommand : CommandBase
         this.SetAction(CommandHandler);
     }
 
+    /// <summary>
+    /// Handles the execution of the translate command by processing the input text through specified AI models.
+    /// </summary>
+    /// <param name="parseResult">The parsed command line arguments containing text and model options.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests during the async operation.</param>
+    /// <returns>A task that represents the asynchronous command execution.</returns>
+    /// <remarks>
+    /// This method performs the following operations:
+    /// <list type="number">
+    /// <item><description>Loads current session settings</description></item>
+    /// <item><description>Extracts text and model parameters from command line arguments</description></item>
+    /// <item><description>Uses default model if no models are specified</description></item>
+    /// <item><description>Processes translation through each specified model with loading indicators</description></item>
+    /// <item><description>Displays results with color-coded output for success and error cases</description></item>
+    /// </list>
+    /// </remarks>
     private async Task CommandHandler(ParseResult parseResult, CancellationToken cancellationToken)
     {
         await this._sessionManager.LoadSettingsAsync();

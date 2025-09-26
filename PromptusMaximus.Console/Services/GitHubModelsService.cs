@@ -9,10 +9,11 @@ using Azure.AI.Inference;
 using PromptusMaximus.Console.Utilities;
 using System.Net.Http;
 using System.Net;
+using PromptusMaximus.Core.Interfaces;
 
 namespace PromptusMaximus.Console.Services;
 
-internal class GitHubModelsService
+internal class GitHubModelsService : IModelsService
 {
     private Uri endpoint = new Uri("https://models.github.ai/inference");
 
@@ -48,7 +49,7 @@ internal class GitHubModelsService
                 },
             Model = modelName,
         };
-        
+
         try
         {
             Response<ChatCompletions> response = await client.CompleteAsync(requestOptions, cancellationToken);
@@ -74,7 +75,7 @@ internal class GitHubModelsService
         {
             throw new ArgumentException($"Client error: {ex.Message}", ex);
         }
-        catch(RequestFailedException ex) when(ex.Status >= 500)
+        catch (RequestFailedException ex) when (ex.Status >= 500)
         {
             throw new InvalidOperationException($"Server error: {ex.Message}", ex);
         }
@@ -82,11 +83,11 @@ internal class GitHubModelsService
         {
             throw new InvalidOperationException($"API request failed: {ex.Message}", ex);
         }
-        catch (TaskCanceledException ex) when(ex.InnerException is TimeoutException)
+        catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
         {
             throw new TimeoutException("The request timed out.", ex);
         }
-        catch (TaskCanceledException)when(cancellationToken.IsCancellationRequested)
+        catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             throw new OperationCanceledException("The operation was cancelled.", cancellationToken);
         }

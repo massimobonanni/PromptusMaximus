@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PromptusMaximus.Core.Configuration;
 
-namespace PromptusMaximus.Core.Configuration;
-
+/// <summary>
+/// Represents the supported languages in the PromptusMaximus application.
+/// </summary>
 public enum Languages
 {
+    /// <summary>
+    /// English language.
+    /// </summary>
     en,
+    
+    /// <summary>
+    /// Italian language.
+    /// </summary>
     it
 }

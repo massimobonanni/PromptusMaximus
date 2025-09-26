@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace GitHubModel.Client.Models;
+namespace PromptusMaximus.Core.Models;
 
 /// <summary>
 /// Represents a collection of GitHub models that implements the array structure from the schema.

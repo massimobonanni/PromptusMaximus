@@ -1,4 +1,4 @@
-namespace GitHubModel.Client.Models;
+namespace PromptusMaximus.Core.Models;
 
 /// <summary>
 /// Represents a GitHub model with its properties and capabilities.

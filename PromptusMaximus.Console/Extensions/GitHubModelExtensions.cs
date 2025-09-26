@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PromptusMaximus.Console.Utilities;
+﻿using PromptusMaximus.Console.Utilities;
 
-namespace GitHubModel.Client.Models;
+namespace PromptusMaximus.Core.Models;
 
 internal static class GitHubModelExtensions
 {

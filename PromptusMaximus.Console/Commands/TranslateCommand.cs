@@ -2,18 +2,18 @@
 using System.CommandLine;
 using PromptusMaximus.Console.Services;
 using PromptusMaximus.Console.Utilities;
+using PromptusMaximus.Core.Interfaces;
 
 namespace PromptusMaximus.Console.Commands;
 
 internal class TranslateCommand : CommandBase
 {
-    private readonly GitHubModelsService _ghModelsService;
+    private readonly IModelsService _modelsService;
 
-    public TranslateCommand(ServiceProvider serviceProvider) :
-        base("translate", "Translate a sentence as a Roman", serviceProvider)
+    public TranslateCommand(ISessionManager sessionManager, IModelsService modelsService) :
+        base("translate", "Translate a sentence as a Roman", sessionManager)
     {
-
-        this._ghModelsService = serviceProvider.GetRequiredService<GitHubModelsService>();
+        this._modelsService = modelsService;
 
         var textOption = new Option<string>(name: "--text")
         {
@@ -63,14 +63,14 @@ internal class TranslateCommand : CommandBase
                 ConsoleUtility.WriteLine($"Model: {model}", ConsoleColor.Green);
 
                 // Use the loading indicator with the API call
-                var result = await this._ghModelsService
+                var result = await this._modelsService
                     .CompleteAsync(model, text, this._sessionManager.GetGitHubToken(),
                         this._sessionManager.CurrentSettings.Language, cancellationToken)
                     .WithLoadingIndicator(
                         message: $"Translating with {model}",
                         style: LoadingIndicator.Style.Spinner,
                         completionMessage: $"\tTranslated with {model}",
-                        showTimeTaken:true,
+                        showTimeTaken: true,
                         completionColor: ConsoleColor.Yellow);
 
                 ConsoleUtility.WriteLine(result);

@@ -1,6 +1,8 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
-using GitHubModel.Client.Models;
+using GitHubModel.Core.Interfaces;
+using PromptusMaximus.Core;
+using PromptusMaximus.Core.Models;
 
 
 
@@ -9,7 +11,7 @@ namespace GitHubModel.Client.Services;
 /// <summary>
 /// Client for interacting with the GitHub Models Catalog API.
 /// </summary>
-public class GitHubModelsClient : IDisposable
+public class GitHubModelsClient : IDisposable, IModelsClient
 {
     private readonly HttpClient _httpClient;
     private readonly bool _disposeHttpClient;
@@ -71,20 +73,20 @@ public class GitHubModelsClient : IDisposable
             {
                 case System.Net.HttpStatusCode.Unauthorized:
                     throw new UnauthorizedAccessException("Invalid GitHub token or insufficient permissions.");
-                
+
                 case System.Net.HttpStatusCode.Forbidden:
                     throw new UnauthorizedAccessException("Access forbidden. Check your GitHub token permissions.");
-                
+
                 case System.Net.HttpStatusCode.NotFound:
                     throw new InvalidOperationException("GitHub Models API endpoint not found.");
-                
+
                 case System.Net.HttpStatusCode.TooManyRequests:
                     throw new InvalidOperationException("Rate limit exceeded. Please try again later.");
-                
+
                 case var status when (int)status >= 400 && (int)status < 500:
                     var clientErrorContent = await response.Content.ReadAsStringAsync(cancellationToken);
                     throw new InvalidOperationException($"Client error ({(int)status}): {clientErrorContent}");
-                
+
                 case var status when (int)status >= 500:
                     var serverErrorContent = await response.Content.ReadAsStringAsync(cancellationToken);
                     throw new InvalidOperationException($"Server error ({(int)status}): {serverErrorContent}");
@@ -93,18 +95,18 @@ public class GitHubModelsClient : IDisposable
             response.EnsureSuccessStatusCode();
 
             var jsonContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            
+
             if (string.IsNullOrWhiteSpace(jsonContent))
                 throw new InvalidOperationException("Received empty response from the API.");
 
-            var models = JsonSerializer.Deserialize<Models.GitHubModel[]>(jsonContent, JsonOptions);
-            
+            var models = JsonSerializer.Deserialize<PromptusMaximus.Core.Models.GitHubModel[]>(jsonContent, JsonOptions);
+
             if (models == null)
                 throw new InvalidOperationException("Failed to deserialize the API response.");
 
             var collection = new GitHubModelCollection();
             collection.AddRange(models);
-            
+
             return collection;
         }
         catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
@@ -123,8 +125,8 @@ public class GitHubModelsClient : IDisposable
         {
             throw new InvalidOperationException($"Failed to parse API response: {ex.Message}", ex);
         }
-        catch (Exception ex) when (!(ex is ArgumentException || ex is UnauthorizedAccessException || 
-                                   ex is InvalidOperationException || ex is TimeoutException || 
+        catch (Exception ex) when (!(ex is ArgumentException || ex is UnauthorizedAccessException ||
+                                   ex is InvalidOperationException || ex is TimeoutException ||
                                    ex is OperationCanceledException))
         {
             throw new InvalidOperationException($"An unexpected error occurred: {ex.Message}", ex);
@@ -141,4 +143,5 @@ public class GitHubModelsClient : IDisposable
             _httpClient?.Dispose();
         }
     }
+
 }

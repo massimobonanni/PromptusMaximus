@@ -1,4 +1,4 @@
-namespace GitHubModel.Client.Models;
+namespace PromptusMaximus.Core.Models;
 
 /// <summary>
 /// Represents the limits for a GitHub model, including input/output token limits.

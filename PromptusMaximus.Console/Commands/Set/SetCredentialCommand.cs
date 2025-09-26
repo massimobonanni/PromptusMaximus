@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PromptusMaximus.Core.Interfaces;
 using System.CommandLine;
 
 namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetCredentialCommand : CommandBase
 {
-    public SetCredentialCommand(ServiceProvider serviceProvider) :
-        base("credential", "Set authentication credentials", serviceProvider)
+    public SetCredentialCommand(ISessionManager sessionManager) :
+        base("credential", "Set authentication credentials", sessionManager)
     {
         var tokenOption = new Option<string>(name: "--token")
         {

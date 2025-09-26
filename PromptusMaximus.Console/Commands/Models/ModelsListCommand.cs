@@ -1,33 +1,33 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.CommandLine;
-using GitHubModel.Client.Services;
+﻿using GitHubModel.Core.Interfaces;
 using PromptusMaximus.Console.Utilities;
-using GitHubModel.Client.Models;
+using PromptusMaximus.Core.Interfaces;
+using PromptusMaximus.Core.Models;
+using System.CommandLine;
 
 namespace PromptusMaximus.Console.Commands.Models;
 
 internal class ModelsListCommand : CommandBase
 {
-    private GitHubModelsClient _gitHubModelsClient;
+    private IModelsClient _modelsClient;
 
-    public ModelsListCommand(ServiceProvider serviceProvider) :
-        base("list", "Retrieve the list of the Models available on GitHub", serviceProvider)
+    public ModelsListCommand(ISessionManager sessionManager, IModelsClient modelsClient) :
+        base("list", "Retrieve the list of the Models available on GitHub", sessionManager)
     {
-        this._gitHubModelsClient = serviceProvider.GetRequiredService<GitHubModelsClient>();
+        this._modelsClient = modelsClient;
         this.SetAction(CommandHandler);
     }
 
-    private async Task CommandHandler(ParseResult parseResult,CancellationToken cancellationToken)
+    private async Task CommandHandler(ParseResult parseResult, CancellationToken cancellationToken)
     {
         await this._sessionManager.LoadSettingsAsync();
 
-        var result = await this._gitHubModelsClient
+        var result = await this._modelsClient
                     .GetModelsAsync(this._sessionManager.GetGitHubToken(), cancellationToken)
                     .WithLoadingIndicator(
                         message: $"Retrieving Models from GitHub",
                         style: LoadingIndicator.Style.Spinner,
                         completionMessage: $"Models retrieved successfully!",
-                        showTimeTaken:true);
+                        showTimeTaken: true);
 
         ConsoleUtility.WriteLine($"Total Models: {result.Count}", ConsoleColor.Yellow);
         System.Console.WriteLine();

@@ -1,19 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.CommandLine;
 using PromptusMaximus.Core.Configuration;
+using PromptusMaximus.Core.Interfaces;
 
 namespace PromptusMaximus.Console.Commands
 {
     internal abstract class CommandBase : Command
     {
 
-        protected readonly ServiceProvider _serviceProvider;
-        protected readonly SessionManager _sessionManager;
+        protected readonly ISessionManager _sessionManager;
 
-        public CommandBase(string name, string description, ServiceProvider serviceProvider) : base(name, description)
+        public CommandBase(string name, string description, ISessionManager sessionManager) : base(name, description)
         {
-            _serviceProvider = serviceProvider;
-            _sessionManager = _serviceProvider.GetRequiredService<SessionManager>();
+            _sessionManager = sessionManager;
         }
     }
 

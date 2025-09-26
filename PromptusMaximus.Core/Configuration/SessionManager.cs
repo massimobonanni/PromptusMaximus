@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using PromptusMaximus.Core.Interfaces;
 using PromptusMaximus.Core.Security;
 
 namespace PromptusMaximus.Core.Configuration;
@@ -8,7 +9,27 @@ namespace PromptusMaximus.Core.Configuration;
 /// Manages application session settings and encrypted secrets, providing persistence 
 /// through JSON configuration files and encrypted data storage.
 /// </summary>
-public class SessionManager
+/// <remarks>
+/// The SessionManager class handles the persistence of application settings and secrets:
+/// <list type="bullet">
+/// <item><description>Regular settings are stored as JSON in the user's profile directory</description></item>
+/// <item><description>Secrets are encrypted using the platform's data protection API and stored separately</description></item>
+/// <item><description>Configuration files are located in ~/.promptusmaximus/</description></item>
+/// <item><description>Provides thread-safe access to current session settings</description></item>
+/// </list>
+/// </remarks>
+/// <example>
+/// <code>
+/// var sessionManager = new SessionManager();
+/// await sessionManager.LoadSettingsAsync();
+/// 
+/// sessionManager.SetModel("gpt-4");
+/// sessionManager.SetSecret("api_key", "your-secret-key");
+/// 
+/// await sessionManager.SaveSettingsAsync();
+/// </code>
+/// </example>
+public class SessionManager : ISessionManager
 {
     /// <summary>
     /// The directory path where configuration files are stored.
@@ -17,12 +38,12 @@ public class SessionManager
         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
         ".promptusmaximus"
     );
-    
+
     /// <summary>
     /// The file path for storing non-sensitive settings in JSON format.
     /// </summary>
     private static readonly string ConfigFile = Path.Combine(ConfigDirectory, "settings.json");
-    
+
     /// <summary>
     /// The file path for storing encrypted secrets.
     /// </summary>
@@ -32,7 +53,7 @@ public class SessionManager
     /// The protected data provider used for encrypting and decrypting sensitive data.
     /// </summary>
     private readonly IProtectedDataProvider _protectedDataProvider;
-    
+
     /// <summary>
     /// The current session settings instance.
     /// </summary>
@@ -105,9 +126,9 @@ public class SessionManager
             Directory.CreateDirectory(ConfigDirectory);
 
             // Save regular settings
-            var json = JsonSerializer.Serialize(_currentSettings, new JsonSerializerOptions 
-            { 
-                WriteIndented = true 
+            var json = JsonSerializer.Serialize(_currentSettings, new JsonSerializerOptions
+            {
+                WriteIndented = true
             });
             await File.WriteAllTextAsync(ConfigFile, json);
 

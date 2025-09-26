@@ -20,9 +20,9 @@ var serviceProvider = serviceCollection.BuildServiceProvider();
 
 var rootCommand = new RootCommand("Promputs Maximus");
 
-rootCommand.Subcommands.Add(new SetCommand(serviceProvider));
-rootCommand.Subcommands.Add(new TranslateCommand(serviceProvider));
-rootCommand.Subcommands.Add(new ModelsCommand(serviceProvider));
+rootCommand.Subcommands.Add(new SetCommand(serviceProvider.GetSessionManager()));
+rootCommand.Subcommands.Add(new TranslateCommand(serviceProvider.GetSessionManager(), serviceProvider.GetModelsService()));
+rootCommand.Subcommands.Add(new ModelsCommand(serviceProvider.GetSessionManager(), serviceProvider.GetModelsClient()));
 
 ParseResult parseResult = rootCommand.Parse(args);
 return await parseResult.InvokeAsync();

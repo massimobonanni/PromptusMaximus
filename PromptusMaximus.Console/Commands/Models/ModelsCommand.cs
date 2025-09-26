@@ -1,15 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.CommandLine;
+﻿using GitHubModel.Core.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using PromptusMaximus.Console.Commands.Models;
+using PromptusMaximus.Core.Interfaces;
+using System.CommandLine;
 
 namespace PromptusMaximus.Console.Commands;
 
 internal class ModelsCommand : CommandBase
 {
-    public ModelsCommand(ServiceProvider serviceProvider) :
-        base("models", "Allow to manage GitHub Models", serviceProvider)
+    public ModelsCommand(ISessionManager sessionManager, IModelsClient modelClient) :
+        base("models", "Allow to manage GitHub Models", sessionManager)
     {
-        this.Subcommands.Add(new ModelsListCommand(serviceProvider));
+        this.Subcommands.Add(new ModelsListCommand(sessionManager, modelClient));
     }
 
 }

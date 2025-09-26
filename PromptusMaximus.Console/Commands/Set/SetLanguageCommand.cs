@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PromptusMaximus.Core.Interfaces;
 using System.CommandLine;
 
 namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetLanguageCommand : CommandBase
 {
-    public SetLanguageCommand(ServiceProvider serviceProvider) :
-        base("language", "Set default language", serviceProvider)
+    public SetLanguageCommand(ISessionManager sessionManager) :
+        base("language", "Set default language", sessionManager)
     {
         var languageOption = new Option<Core.Configuration.Languages>(name: "--language")
         {

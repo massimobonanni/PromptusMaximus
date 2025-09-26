@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PromptusMaximus.Core.Interfaces;
 using System.CommandLine;
 
 namespace PromptusMaximus.Console.Commands.Set;
 
 internal class SetModelCommand : CommandBase
 {
-    public SetModelCommand(ServiceProvider serviceProvider) :
-        base("model", "Set default model", serviceProvider)
+    public SetModelCommand(ISessionManager sessionManager) :
+        base("model", "Set default model", sessionManager)
     {
         var modelOption = new Option<string>(name: "--model")
         {
@@ -19,9 +20,9 @@ internal class SetModelCommand : CommandBase
         this.SetAction(CommandHandler);
     }
 
-    private async Task CommandHandler(ParseResult parseResult,CancellationToken cancellationToken)
+    private async Task CommandHandler(ParseResult parseResult, CancellationToken cancellationToken)
     {
-        var model= parseResult.GetValue<string>("--model");
+        var model = parseResult.GetValue<string>("--model");
 
         await this._sessionManager.LoadSettingsAsync();
         this._sessionManager.SetModel(model);

@@ -457,8 +457,8 @@ classDiagram
     
     class LoadingIndicatorExtensions {
         <<static>>
-        +WithLoadingIndicator~T~(task Task~T~, message string, style Style, completionMessage string?, completionColor ConsoleColor, showTimeTaken bool, intervalMs int) Task~T~
-        +WithLoadingIndicator(task Task, message string, style Style, completionMessage string?, completionColor ConsoleColor, showTimeTaken bool, intervalMs int) Task
+        +WithLoadingIndicator~T~(task Task~T~) Task~T~
+        +WithLoadingIndicator(task Task) Task
     }
     
     class StringExtensions {
@@ -512,18 +512,6 @@ classDiagram
     ModelsListCommand --> GitHubModelExtensions : uses
     TranslateCommand --> ConsoleUtility : uses
     TranslateCommand --> PromptFileUtility : uses
-    
-    %% Styling
-    classDiagram
-        class Program fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
-        class CommandBase fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-        class ISessionManager fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-        class IModelsService fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-        class IModelsClient fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-        class IProtectedDataProvider fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-        class SessionManager fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-        class GitHubModelsService fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-        class GitHubModelsClient fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
 ```
 
 ---

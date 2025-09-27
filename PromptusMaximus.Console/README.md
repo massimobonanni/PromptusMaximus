@@ -221,6 +221,311 @@ The console application is built with:
 - **Session Management**: Secure credential storage and configuration persistence
 - **Loading Indicators**: Visual feedback during API calls
 
+### Class Diagram
+
+```mermaid
+classDiagram
+    %% Command Layer - Console Application
+    class Program {
+        <<static>>
+        +Main(args string[]) Task~int~
+    }
+    
+    class CommandBase {
+        <<abstract>>
+        #_sessionManager ISessionManager
+        +CommandBase(name string, description string, sessionManager ISessionManager)
+    }
+    
+    class SetCommand {
+        +SetCommand(sessionManager ISessionManager)
+    }
+    
+    class TranslateCommand {
+        -_modelsService IModelsService
+        +TranslateCommand(sessionManager ISessionManager, modelsService IModelsService)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    class ModelsCommand {
+        +ModelsCommand(sessionManager ISessionManager, modelClient IModelsClient)
+    }
+    
+    %% Set Command Subcommands
+    class SetCredentialCommand {
+        +SetCredentialCommand(sessionManager ISessionManager)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    class SetLanguageCommand {
+        +SetLanguageCommand(sessionManager ISessionManager)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    class SetModelCommand {
+        +SetModelCommand(sessionManager ISessionManager)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    class SetShowCommand {
+        +SetShowCommand(sessionManager ISessionManager)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    class SetClearCommand {
+        +SetClearCommand(sessionManager ISessionManager)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    class ModelsListCommand {
+        -_modelsClient IModelsClient
+        +ModelsListCommand(sessionManager ISessionManager, modelsClient IModelsClient)
+        -CommandHandler(parseResult ParseResult, cancellationToken CancellationToken) Task
+    }
+    
+    %% Service Layer - Console
+    class GitHubModelsService {
+        -endpoint Uri
+        +CompleteAsync(modelName string, prompt string, ghToken string, language Languages, cancellationToken CancellationToken) Task~string~
+    }
+    
+    %% Utility Layer - Console
+    class ConsoleUtility {
+        <<static>>
+        +WriteLine(message string, foregroundColor ConsoleColor) void
+        +Write(message string, foregroundColor ConsoleColor) void
+        +WriteApplicationBanner() void
+    }
+    
+    class LoadingIndicator {
+        -_characters char[]
+        -_message string
+        -_cancellationTokenSource CancellationTokenSource
+        +LoadingIndicator(message string, style Style, intervalMs int)
+        +Stop() void
+        +Complete(completionMessage string, showTimeTaken bool, color ConsoleColor) void
+        +Dispose() void
+    }
+    
+    class PromptFileUtility {
+        <<static>>
+        +GetSystemPromptAsync(language Languages) Task~string~
+        +GetSystemPrompt(language Languages) string?
+    }
+    
+    %% Core Interface Layer
+    class ISessionManager {
+        <<interface>>
+        +CurrentSettings SessionSettings
+        +LoadSettingsAsync() Task
+        +SaveSettingsAsync() Task
+        +ClearAllSettingsAsync(deleteFiles bool) Task
+        +SetModel(model string) void
+        +SetLanguage(language Languages) void
+        +SetGitHubToken(token string) void
+        +GetGitHubToken() string?
+        +SetSecret(key string, value string) void
+        +GetSecret(key string) string?
+        +SetSetting(key string, value string) void
+        +GetSetting(key string) string?
+    }
+    
+    class IModelsService {
+        <<interface>>
+        +CompleteAsync(modelName string, prompt string, ghToken string, language Languages, cancellationToken CancellationToken) Task~string~
+    }
+    
+    class IModelsClient {
+        <<interface>>
+        +GetModelsAsync(ghToken string, cancellationToken CancellationToken) Task~GitHubModelCollection~
+    }
+    
+    class IProtectedDataProvider {
+        <<interface>>
+        +ProtectAsync(data byte[], optionalEntropy string?) Task~byte[]~
+        +UnprotectAsync(encryptedData byte[], optionalEntropy string?) Task~byte[]~
+    }
+    
+    %% Core Configuration Layer
+    class SessionManager {
+        -_protectedDataProvider IProtectedDataProvider
+        -_currentSettings SessionSettings
+        +CurrentSettings SessionSettings
+        +LoadSettingsAsync() Task
+        +SaveSettingsAsync() Task
+        +ClearAllSettingsAsync(deleteFiles bool) Task
+        +SetModel(model string) void
+        +SetLanguage(language Languages) void
+        +SetGitHubToken(token string) void
+        +GetGitHubToken() string?
+        +SetSecret(key string, value string) void
+        +GetSecret(key string) string?
+        +SetSetting(key string, value string) void
+        +GetSetting(key string) string?
+    }
+    
+    class SessionSettings {
+        +Model string?
+        +Language Languages
+        +CustomSettings Dictionary~string, string~
+        +Secrets Dictionary~string, string~
+    }
+    
+    class Languages {
+        <<enumeration>>
+        en
+        it
+    }
+    
+    %% Core Security Layer
+    class ProtectedDataProviderFactory {
+        <<static>>
+        +Create() IProtectedDataProvider
+    }
+    
+    class WindowsProtectedDataProvider {
+        +ProtectAsync(data byte[], optionalEntropy string?) Task~byte[]~
+        +UnprotectAsync(encryptedData byte[], optionalEntropy string?) Task~byte[]~
+    }
+    
+    class LinuxProtectedDataProvider {
+        -KeySize int$
+        -IvSize int$
+        +ProtectAsync(data byte[], optionalEntropy string?) Task~byte[]~
+        +UnprotectAsync(encryptedData byte[], optionalEntropy string?) Task~byte[]~
+        -GenerateKeyAsync(optionalEntropy string?) Task~byte[]~
+    }
+    
+    %% Core Models Layer
+    class GitHubModel {
+        +Id string?
+        +Name string?
+        +Registry string?
+        +Publisher string?
+        +Summary string?
+        +RateLimitTier string?
+        +HtmlUrl string?
+        +Version string?
+        +Capabilities List~string~
+        +Limits GitHubModelLimits?
+        +Tags List~string~
+        +SupportedInputModalities List~string~
+        +SupportedOutputModalities List~string~
+    }
+    
+    class GitHubModelLimits {
+        +MaxInputTokens int?
+        +MaxOutputTokens int?
+    }
+    
+    class GitHubModelCollection {
+        -_models List~GitHubModel~
+        +Models IReadOnlyList~GitHubModel~
+        +Count int
+        +Add(model GitHubModel) void
+        +AddRange(models IEnumerable~GitHubModel~) void
+        +Remove(model GitHubModel) bool
+        +Clear() void
+        +GetByPublisher(publisher string) IEnumerable~GitHubModel~
+        +GetByCapability(capability string) IEnumerable~GitHubModel~
+        +GetByTag(tag string) IEnumerable~GitHubModel~
+    }
+    
+    %% Client Layer
+    class GitHubModelsClient {
+        -_httpClient HttpClient
+        -_disposeHttpClient bool
+        -JsonOptions JsonSerializerOptions$
+        +GitHubModelsClient()
+        +GitHubModelsClient(httpClient HttpClient)
+        +GetModelsAsync(ghToken string, cancellationToken CancellationToken) Task~GitHubModelCollection~
+        +Dispose() void
+    }
+    
+    %% Extension Classes
+    class ServiceProviderExtensions {
+        <<static>>
+        +GetModelsClient(provider ServiceProvider) IModelsClient
+        +GetModelsService(provider ServiceProvider) IModelsService
+        +GetSessionManager(provider ServiceProvider) ISessionManager
+    }
+    
+    class GitHubModelExtensions {
+        <<static>>
+        +Display(model GitHubModel) void
+    }
+    
+    class LoadingIndicatorExtensions {
+        <<static>>
+        +WithLoadingIndicator~T~(task Task~T~, message string, style Style, completionMessage string?, completionColor ConsoleColor, showTimeTaken bool, intervalMs int) Task~T~
+        +WithLoadingIndicator(task Task, message string, style Style, completionMessage string?, completionColor ConsoleColor, showTimeTaken bool, intervalMs int) Task
+    }
+    
+    class StringExtensions {
+        <<static>>
+        +Mask(input string, maskCharacter char, visibleCharacters int) string
+        +MaskStringBothEnds(input string, visibleStartCharacters int, visibleEndCharacters int, maskCharacter char) string
+    }
+    
+    %% Relationships
+    Program --> SetCommand : creates
+    Program --> TranslateCommand : creates
+    Program --> ModelsCommand : creates
+    Program --> ServiceProviderExtensions : uses
+    
+    CommandBase <|-- SetCommand
+    CommandBase <|-- TranslateCommand
+    CommandBase <|-- ModelsCommand
+    
+    SetCommand --> SetCredentialCommand : contains
+    SetCommand --> SetLanguageCommand : contains
+    SetCommand --> SetModelCommand : contains
+    SetCommand --> SetShowCommand : contains
+    SetCommand --> SetClearCommand : contains
+    
+    ModelsCommand --> ModelsListCommand : contains
+    
+    CommandBase --> ISessionManager : uses
+    TranslateCommand --> IModelsService : uses
+    ModelsListCommand --> IModelsClient : uses
+    
+    GitHubModelsService ..|> IModelsService : implements
+    GitHubModelsClient ..|> IModelsClient : implements
+    SessionManager ..|> ISessionManager : implements
+    
+    WindowsProtectedDataProvider ..|> IProtectedDataProvider : implements
+    LinuxProtectedDataProvider ..|> IProtectedDataProvider : implements
+    ProtectedDataProviderFactory --> IProtectedDataProvider : creates
+    
+    SessionManager --> SessionSettings : contains
+    SessionManager --> IProtectedDataProvider : uses
+    SessionSettings --> Languages : uses
+    
+    GitHubModelCollection --> GitHubModel : aggregates
+    GitHubModel --> GitHubModelLimits : contains
+    
+    TranslateCommand --> LoadingIndicatorExtensions : uses
+    ModelsListCommand --> LoadingIndicatorExtensions : uses
+    LoadingIndicatorExtensions --> LoadingIndicator : creates
+    
+    SetShowCommand --> StringExtensions : uses
+    ModelsListCommand --> GitHubModelExtensions : uses
+    TranslateCommand --> ConsoleUtility : uses
+    TranslateCommand --> PromptFileUtility : uses
+    
+    %% Styling
+    classDiagram
+        class Program fill:#e8f4fd,stroke:#1976d2,stroke-width:2px
+        class CommandBase fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+        class ISessionManager fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+        class IModelsService fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+        class IModelsClient fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+        class IProtectedDataProvider fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+        class SessionManager fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+        class GitHubModelsService fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+        class GitHubModelsClient fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+```
+
 ---
 
 ## 🔒 Security

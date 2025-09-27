@@ -31,50 +31,50 @@ The library follows a clean architecture pattern with clear separation of concer
 classDiagram
     class IModelsClient {
         <<interface>>
-        +GetModelsAsync(ghToken: string, cancellationToken: CancellationToken) Task~GitHubModelCollection~
+        +GetModelsAsync(ghToken string, cancellationToken CancellationToken) TaskGitHubModelCollection
     }
     
     class GitHubModelsClient {
-        -_httpClient: HttpClient
-        -_disposeHttpClient: bool
-        -JsonOptions: JsonSerializerOptions$
+        -_httpClient HttpClient
+        -_disposeHttpClient bool
+        -JsonOptions JsonSerializerOptions$
         +GitHubModelsClient()
-        +GitHubModelsClient(httpClient: HttpClient)
-        +GetModelsAsync(ghToken: string, cancellationToken: CancellationToken) Task~GitHubModelCollection~
+        +GitHubModelsClient(httpClient HttpClient)
+        +GetModelsAsync(ghToken string, cancellationToken CancellationToken) TaskGitHubModelCollection
         +Dispose() void
     }
     
     class GitHubModelCollection {
-        -_models: List~GitHubModel~
-        +Models: IReadOnlyList~GitHubModel~
-        +Count: int
-        +Add(model: GitHubModel) void
-        +AddRange(models: IEnumerable~GitHubModel~) void
+        -_models ListGitHubModel
+        +Models IReadOnlyListGitHubModel
+        +Count int
+        +Add(model GitHubModel) void
+        +AddRange(models IEnumerableGitHubModel) void
         +Clear() void
-        +Contains(model: GitHubModel) bool
-        +Remove(model: GitHubModel) bool
-        +GetEnumerator() IEnumerator~GitHubModel~
+        +Contains(model GitHubModel) bool
+        +Remove(model GitHubModel) bool
+        +GetEnumerator() IEnumeratorGitHubModel
     }
     
     class GitHubModel {
-        +Id: string?
-        +Name: string?
-        +Registry: string?
-        +Publisher: string?
-        +Summary: string?
-        +RateLimitTier: string?
-        +HtmlUrl: string?
-        +Version: string?
-        +Capabilities: List~string~
-        +Limits: GitHubModelLimits?
-        +Tags: List~string~
-        +SupportedInputModalities: List~string~
-        +SupportedOutputModalities: List~string~
+        +Id string
+        +Name string
+        +Registry string
+        +Publisher string
+        +Summary string
+        +RateLimitTier string
+        +HtmlUrl string
+        +Version string
+        +Capabilities ListString
+        +Limits GitHubModelLimits
+        +Tags ListString
+        +SupportedInputModalities ListString
+        +SupportedOutputModalities ListString
     }
     
     class GitHubModelLimits {
-        +MaxInputTokens: int?
-        +MaxOutputTokens: int?
+        +MaxInputTokens int
+        +MaxOutputTokens int
     }
     
     class HttpClient {
@@ -86,9 +86,9 @@ classDiagram
         +Dispose() void
     }
     
-    class IEnumerable~T~ {
+    class IEnumerableT {
         <<interface>>
-        +GetEnumerator() IEnumerator~T~
+        +GetEnumerator() IEnumeratorT
     }
     
     %% Relationships
@@ -96,7 +96,7 @@ classDiagram
     GitHubModelsClient ..|> IDisposable : implements
     GitHubModelsClient --> HttpClient : uses
     GitHubModelsClient --> GitHubModelCollection : returns
-    GitHubModelCollection ..|> IEnumerable~T~ : implements
+    GitHubModelCollection ..|> IEnumerableT : implements
     GitHubModelCollection --> GitHubModel : contains
     GitHubModel --> GitHubModelLimits : has
     
@@ -108,7 +108,7 @@ classDiagram
     
     class IModelsClient interfaceStyle
     class IDisposable interfaceStyle
-    class IEnumerable~T~ interfaceStyle
+    class IEnumerableT interfaceStyle
     class GitHubModelsClient clientStyle
     class GitHubModelCollection modelStyle
     class GitHubModel modelStyle

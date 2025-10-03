@@ -28,16 +28,16 @@ Promptus Maximus is a satirical translation engine that turns everyday expressio
 
 - GitHub-hosted LLMs (because open source is the new Empire)
 - Prompt engineering with theatrical flair
-- Optional mascot personalities (DevDuck the Scriba, CoderFox the Centurion)
+- Optional mascot personalities (Loquatius the Senator, Marsellus the General)
 - Zero actual Latin knowledge required
 
 ---
 
 ## 🐔 Mascot Mode (Optional but Highly Recommended)
 
-Enable **Mascot Mode** to let DevDuck and CoderFox deliver translations in character:
-- 🦆 *DevDuck*: A neurotic Roman scribe with caffeine dependency
-- 🦊 *CoderFox*: A battle-hardened centurion who commits with honor
+Enable **Mascot Mode** to let Loquatius and Marsellus deliver translations in character:
+- 🦆 *Loquatius*: A neurotic Roman Senator with caffeine dependency
+- 🦊 *Marsellus*: A battle-hardened General who commits with honor
 
 ---
 

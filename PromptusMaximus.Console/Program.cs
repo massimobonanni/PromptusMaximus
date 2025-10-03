@@ -11,6 +11,8 @@ using PromptusMaximus.Console.Commands;
 using PromptusMaximus.Console.Utilities;
 using PromptusMaximus.Console.Services;
 using GitHubModel.Client.Services;
+using PromptusMaximus.Core.Interfaces;
+using GitHubModel.Core.Interfaces;
 
 ConsoleUtility.WriteApplicationBanner();
 
@@ -19,9 +21,9 @@ ConsoleUtility.WriteApplicationBanner();
 /// Registers session management, GitHub Models service, and client services as singletons.
 /// </summary>
 var serviceCollection = new ServiceCollection();
-serviceCollection.TryAddSingleton<SessionManager>();
-serviceCollection.TryAddSingleton<GitHubModelsService>();
-serviceCollection.TryAddSingleton<GitHubModelsClient>();
+serviceCollection.TryAddSingleton<ISessionManager, SessionManager>();
+serviceCollection.TryAddSingleton<IModelsService, GitHubModelsService>();
+serviceCollection.TryAddSingleton<IModelsClient, GitHubModelsClient>();
 
 // Build the service provider to resolve dependencies
 var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -32,6 +34,7 @@ var serviceProvider = serviceCollection.BuildServiceProvider();
 /// </summary>
 var rootCommand = new RootCommand("Promputs Maximus");
 
+rootCommand.Subcommands.Add(new VersionCommand(serviceProvider.GetSessionManager()));
 rootCommand.Subcommands.Add(new SetCommand(serviceProvider.GetSessionManager()));
 rootCommand.Subcommands.Add(new TranslateCommand(serviceProvider.GetSessionManager(), serviceProvider.GetModelsService()));
 rootCommand.Subcommands.Add(new ModelsCommand(serviceProvider.GetSessionManager(), serviceProvider.GetModelsClient()));

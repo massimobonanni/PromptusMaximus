@@ -23,7 +23,7 @@ internal class TranslateCommand : CommandBase
     /// <param name="sessionManager">The session manager for handling user settings and authentication.</param>
     /// <param name="modelsService">The service for interacting with AI models.</param>
     public TranslateCommand(ISessionManager sessionManager, IModelsService modelsService) :
-        base("translate", "Translate a sentence as a Roman", sessionManager)
+        base("translate", "Translate a sentence as an old Roman", sessionManager)
     {
         this._modelsService = modelsService;
 

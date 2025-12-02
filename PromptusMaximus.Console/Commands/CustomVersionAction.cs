@@ -12,15 +12,6 @@ namespace PromptusMaximus.Console.Commands
     /// </summary>
     internal class CustomVersionAction : SynchronousCommandLineAction
     {
-        private readonly ISessionManager _sessionManager;
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomVersionAction"/> class.
-        /// </summary>
-        public CustomVersionAction(ISessionManager sessionManager)
-        {
-            _sessionManager = sessionManager;
-        }
-
         /// <summary>
         /// Invokes the version action, displaying a custom message instead of version details.
         /// </summary>

@@ -9,6 +9,8 @@ namespace PromptusMaximus.Console.Commands.Set;
 /// </summary>
 internal class SetCredentialCommand : CommandBase
 {
+    private readonly Option<string> _tokenOption;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SetCredentialCommand"/> class.
     /// </summary>
@@ -16,13 +18,13 @@ internal class SetCredentialCommand : CommandBase
     public SetCredentialCommand(ISessionManager sessionManager) :
         base("credential", "Set authentication credentials", sessionManager)
     {
-        var tokenOption = new Option<string>(name: "--token")
+        _tokenOption = new Option<string>(name: "--token")
         {
             Description = "GitHub token for authentication",
             Required = true,
         };
-        tokenOption.Aliases.Add("-t");
-        this.Options.Add(tokenOption);
+        _tokenOption.Aliases.Add("-t");
+        this.Options.Add(_tokenOption);
 
         this.SetAction(CommandHandler);
     }
@@ -35,7 +37,7 @@ internal class SetCredentialCommand : CommandBase
     /// <returns>A task that represents the asynchronous command execution operation.</returns>
     private async Task CommandHandler(ParseResult parseResult, CancellationToken cancellationToken)
     {
-        var ghToken = parseResult.GetValue<string>("--token");
+        var ghToken = parseResult.GetValue(_tokenOption);
 
         await this._sessionManager.LoadSettingsAsync();
         this._sessionManager.SetGitHubToken(ghToken);

@@ -10,6 +10,9 @@ namespace PromptusMaximus.Console.Commands.Set;
 /// </summary>
 internal class SetLanguageCommand : CommandBase
 {
+
+    private readonly Option<Core.Configuration.Languages> _languageOption;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SetLanguageCommand"/> class.
     /// </summary>
@@ -17,13 +20,13 @@ internal class SetLanguageCommand : CommandBase
     public SetLanguageCommand(ISessionManager sessionManager) :
         base("language", "Set default language", sessionManager)
     {
-        var languageOption = new Option<Core.Configuration.Languages>(name: "--language")
+        _languageOption = new Option<Core.Configuration.Languages>(name: "--language")
         {
             Description = "The default language (only en and it supported)",
             Required = true,
         };
-        languageOption.Aliases.Add("-l");
-        this.Options.Add(languageOption);
+        _languageOption.Aliases.Add("-l");
+        this.Options.Add(_languageOption);
 
         this.SetAction(CommandHandler);
     }

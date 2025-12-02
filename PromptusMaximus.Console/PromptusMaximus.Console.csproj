@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Binders\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Prompts\SystemPrompt_IT.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

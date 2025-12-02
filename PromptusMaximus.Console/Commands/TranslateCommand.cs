@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.CommandLine;
 using PromptusMaximus.Console.Services;
 using PromptusMaximus.Console.Utilities;
 using PromptusMaximus.Core.Interfaces;
+using System.CommandLine;
+using System.Reflection;
 
 namespace PromptusMaximus.Console.Commands;
 
@@ -17,6 +18,10 @@ internal class TranslateCommand : CommandBase
     /// </summary>
     private readonly IModelsService _modelsService;
 
+    private readonly Option<string> _textOption;
+
+    private readonly Option<List<string>> _modelsOption;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TranslateCommand"/> class.
     /// </summary>
@@ -27,22 +32,55 @@ internal class TranslateCommand : CommandBase
     {
         this._modelsService = modelsService;
 
-        var textOption = new Option<string>(name: "--text")
+        _textOption = new Option<string>(name: "--text")
         {
             Description = "The text to translate",
             Required = true,
         };
-        textOption.Aliases.Add("-t");
-        this.Options.Add(textOption);
+        _textOption.Aliases.Add("-t");
+        this.Options.Add(_textOption);
 
-        var modelsOption = new Option<List<string>>(name: "--model")
+        _textOption.Validators.Add(result =>
+        {
+            var value = result.GetValue(_textOption);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result.AddError("The --text option cannot be empty.");
+            }
+        });
+
+        _modelsOption = new Option<List<string>>(name: "--model")
         {
             AllowMultipleArgumentsPerToken = true,
             Description = "Models to use. If you don;t set this option, the default model is used",
             Required = false,
         };
-        modelsOption.Aliases.Add("-m");
-        this.Options.Add(modelsOption);
+        _modelsOption.Aliases.Add("-m");
+        this.Options.Add(_modelsOption);
+
+        _modelsOption.Validators.Add(result =>
+        {
+            var value = result.GetValue(_modelsOption);
+            if ((value == null || !value.Any() || value.All(string.IsNullOrWhiteSpace)) &&
+                string.IsNullOrWhiteSpace(sessionManager.CurrentSettings.Model))
+            {
+                result.AddError("At least one model must be specified using --model option or a default model must be set in settings.");
+            }
+        });
+
+        _modelsOption.CustomParser = (result =>
+        {
+            List<string> values = null;
+            if (result.Tokens.Any())
+            {
+                values = result.Tokens.Select(t => t.Value).Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
+            }
+            if ((values == null || !values.Any()) && !string.IsNullOrEmpty(sessionManager.CurrentSettings.Model))
+            {
+                values = new List<string>() { sessionManager.CurrentSettings.Model };
+            }
+            return values;
+        });
 
         this.SetAction(CommandHandler);
     }
@@ -67,21 +105,11 @@ internal class TranslateCommand : CommandBase
     {
         await this._sessionManager.LoadSettingsAsync();
 
-        var text = parseResult.GetValue<string>("--text");
+        var text = parseResult.GetValue(_textOption);
 
         ConsoleUtility.WriteLine($"Translating the following text:\n\t\"{text}\"\n", ConsoleColor.Magenta);
 
-        var models = parseResult.GetValue<List<string>>("--model");
-        if (models == null || !models.Any())
-        {
-            models = new List<string>() { _sessionManager.CurrentSettings.Model };
-        }
-
-        if (!models.Any())
-        {
-            ConsoleUtility.WriteLine("No models specified and no default model set in settings.", ConsoleColor.Red);
-            return;
-        }
+        var models = parseResult.GetValue(_modelsOption);
 
         foreach (var model in models)
         {
@@ -106,7 +134,7 @@ internal class TranslateCommand : CommandBase
             }
             catch (Exception ex)
             {
-                ConsoleUtility.WriteLine($"Error with model {model}: {ex.Message}", ConsoleColor.Red);
+                parseResult.CommandResult.AddError($"Error with model {model}: {ex.Message}");
             }
         }
     }

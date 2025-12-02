@@ -10,6 +10,9 @@ namespace PromptusMaximus.Console.Commands.Set;
 /// </summary>
 internal class SetModelCommand : CommandBase
 {
+
+    private readonly Option<string> _modelOption;
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="SetModelCommand"/> class.
     /// </summary>
@@ -17,13 +20,13 @@ internal class SetModelCommand : CommandBase
     public SetModelCommand(ISessionManager sessionManager) :
         base("model", "Set default model", sessionManager)
     {
-        var modelOption = new Option<string>(name: "--model")
+        _modelOption = new Option<string>(name: "--model")
         {
             Description = "The default GitHub Model (see https://github.com/marketplace?type=models)",
             Required = true,
         };
-        modelOption.Aliases.Add("-m");
-        this.Options.Add(modelOption);
+        _modelOption.Aliases.Add("-m");
+        this.Options.Add(_modelOption);
 
         this.SetAction(CommandHandler);
     }

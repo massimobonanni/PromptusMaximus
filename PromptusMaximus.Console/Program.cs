@@ -32,9 +32,15 @@ var serviceProvider = serviceCollection.BuildServiceProvider();
 /// Create the root command with available subcommands for the CLI application.
 /// Supports 'set' for configuration, 'translate' for AI text processing, and 'models' for model management.
 /// </summary>
-var rootCommand = new RootCommand("Promputs Maximus");
+var rootCommand = new RootCommand("Promptus Maximus");
 
-rootCommand.Subcommands.Add(new VersionCommand(serviceProvider.GetSessionManager()));
+foreach (var option in rootCommand.Options)
+{
+    if (option is VersionOption defaultVersionOption)
+    {
+        defaultVersionOption.Action = new CustomVersionAction(serviceProvider.GetSessionManager());
+    }
+}
 rootCommand.Subcommands.Add(new SetCommand(serviceProvider.GetSessionManager()));
 rootCommand.Subcommands.Add(new TranslateCommand(serviceProvider.GetSessionManager(), serviceProvider.GetModelsService()));
 rootCommand.Subcommands.Add(new ModelsCommand(serviceProvider.GetSessionManager(), serviceProvider.GetModelsClient()));

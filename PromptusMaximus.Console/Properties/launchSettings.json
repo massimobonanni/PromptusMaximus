@@ -27,6 +27,10 @@
     "Models List": {
       "commandName": "Project",
       "commandLineArgs": "models list"
+    },
+    "Version": {
+      "commandName": "Project",
+      "commandLineArgs": "--version"
     }
   }
 }

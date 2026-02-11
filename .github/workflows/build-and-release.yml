@@ -55,20 +55,36 @@ jobs:
       run: dotnet test PromptusMaximus.sln --configuration Release --no-build --verbosity normal
       continue-on-error: true
 
-    - name: Publish PromptusMaximus.Console
-      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish --no-build
+    - name: Publish PromptusMaximus.Console for Windows
+      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish-win -r win-x64 --self-contained true -p:PublishSingleFile=true
 
-    - name: Create zip archive
+    - name: Publish PromptusMaximus.Console for Linux
+      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish-linux -r linux-x64 --self-contained true -p:PublishSingleFile=true
+
+    - name: Create Windows zip archive
       run: |
-        cd publish
-        zip -r ../promptusmaximus-${{ steps.version.outputs.version }}.zip .
+        cd publish-win
+        zip -r ../promptusmaximus-win-x64-${{ steps.version.outputs.version }}.zip .
         cd ..
 
-    - name: Upload publish artifact
+    - name: Create Linux zip archive
+      run: |
+        cd publish-linux
+        zip -r ../promptusmaximus-linux-x64-${{ steps.version.outputs.version }}.zip .
+        cd ..
+
+    - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
-        name: promptusmaximus-${{ steps.version.outputs.version }}
-        path: promptusmaximus-${{ steps.version.outputs.version }}.zip
+        name: promptusmaximus-win-x64-${{ steps.version.outputs.version }}
+        path: promptusmaximus-win-x64-${{ steps.version.outputs.version }}.zip
+        retention-days: 5
+
+    - name: Upload Linux artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: promptusmaximus-linux-x64-${{ steps.version.outputs.version }}
+        path: promptusmaximus-linux-x64-${{ steps.version.outputs.version }}.zip
         retention-days: 5
 
   create-release:
@@ -80,10 +96,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download artifact
+    - name: Download Windows artifact
       uses: actions/download-artifact@v4
       with:
-        name: promptusmaximus-${{ needs.build-and-test.outputs.version }}
+        name: promptusmaximus-win-x64-${{ needs.build-and-test.outputs.version }}
+        path: .
+
+    - name: Download Linux artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: promptusmaximus-linux-x64-${{ needs.build-and-test.outputs.version }}
         path: .
 
     - name: Get commit info
@@ -102,9 +124,15 @@ jobs:
           
           **Version:** ${{ needs.build-and-test.outputs.version }}
           
+          **Platforms:**
+          - Windows (x64)
+          - Linux (x64)
+          
           **Changes:**
           ${{ github.event.head_commit.message }}
-        files: promptusmaximus-${{ needs.build-and-test.outputs.version }}.zip
+        files: |
+          promptusmaximus-win-x64-${{ needs.build-and-test.outputs.version }}.zip
+          promptusmaximus-linux-x64-${{ needs.build-and-test.outputs.version }}.zip
         draft: false
         prerelease: false
       env:

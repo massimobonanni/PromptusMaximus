@@ -30,6 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Prompts\SystemPrompt_Mascot_IT.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Prompts\SystemPrompt_Mascot_EN.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Prompts\SystemPrompt_IT.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

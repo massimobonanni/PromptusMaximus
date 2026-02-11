@@ -28,6 +28,7 @@ internal class GitHubModelsService : IModelsService
     /// Completes a prompt using the specified AI model through GitHub Models API.
     /// </summary>
     /// <param name="modelName">The name of the AI model to use for completion. Cannot be null or empty.</param>
+    /// <param name="mascotMode">Indicates whether to enable mascotte mode for the completion.</param>
     /// <param name="prompt">The input prompt to be completed by the model. Cannot be null or empty.</param>
     /// <param name="ghToken">The GitHub token for authentication and API access. Cannot be null or empty.</param>
     /// <param name="language">The language setting for the completion request, used to determine the system prompt.</param>
@@ -50,7 +51,7 @@ internal class GitHubModelsService : IModelsService
     /// <exception cref="OperationCanceledException">
     /// Thrown when the operation is cancelled via the <paramref name="cancellationToken"/>.
     /// </exception>
-    public async Task<string> CompleteAsync(string modelName, string prompt, string ghToken,
+    public async Task<string> CompleteAsync(string modelName, string prompt, bool mascotMode, string ghToken,
         Languages language, CancellationToken cancellationToken)
     {
         // Input validation
@@ -71,7 +72,7 @@ internal class GitHubModelsService : IModelsService
             new AzureAIInferenceClientOptions()
         );
 
-        var systemPrompt = await PromptFileUtility.GetSystemPromptAsync(language);
+        var systemPrompt = await PromptFileUtility.GetSystemPromptAsync(language,mascotMode);
 
         var requestOptions = new ChatCompletionsOptions()
         {

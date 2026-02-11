@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PromptusMaximus.Console.Services;
 using PromptusMaximus.Console.Utilities;
+using PromptusMaximus.Core.Configuration;
 using PromptusMaximus.Core.Interfaces;
 using System.CommandLine;
 using System.Reflection;
@@ -20,7 +21,9 @@ internal class TranslateCommand : CommandBase
 
     private readonly Option<string> _textOption;
 
-    private readonly Option<List<string>> _modelsOption;
+    private readonly Option<bool> _mascotOption;
+
+    private readonly Option<string[]> _modelsOption;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TranslateCommand"/> class.
@@ -31,6 +34,15 @@ internal class TranslateCommand : CommandBase
         base("translate", "Translate a sentence as an old Roman", sessionManager)
     {
         this._modelsService = modelsService;
+
+        _mascotOption = new Option<bool>("--mascotMode")
+        {
+            Description = "Enable the mascotte mode",
+            Required = false,
+            DefaultValueFactory = (r) => false
+        };
+        _mascotOption.Aliases.Add("-mm");
+        this.Options.Add(_mascotOption);
 
         _textOption = new Option<string>(name: "--text")
         {
@@ -49,14 +61,14 @@ internal class TranslateCommand : CommandBase
             }
         });
 
-        _modelsOption = new Option<List<string>>(name: "--model")
+        _modelsOption = new Option<string[]>(name: "--model")
         {
             AllowMultipleArgumentsPerToken = true,
-            Description = "Models to use. If you don;t set this option, the default model is used",
+            Arity = ArgumentArity.ZeroOrMore,
+            Description = "Models to use. If you don't set this option, the default model is used",
             Required = false,
         };
         _modelsOption.Aliases.Add("-m");
-        this.Options.Add(_modelsOption);
 
         _modelsOption.Validators.Add(result =>
         {
@@ -68,19 +80,16 @@ internal class TranslateCommand : CommandBase
             }
         });
 
-        _modelsOption.CustomParser = (result =>
+        _modelsOption.CustomParser = result =>
         {
-            List<string> values = null;
+            string[] values = null;
             if (result.Tokens.Any())
             {
-                values = result.Tokens.Select(t => t.Value).Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
-            }
-            if ((values == null || !values.Any()) && !string.IsNullOrEmpty(sessionManager.CurrentSettings.Model))
-            {
-                values = new List<string>() { sessionManager.CurrentSettings.Model };
+                values = result.Tokens.Select(t => t.Value).Where(v => !string.IsNullOrWhiteSpace(v)).ToArray();
             }
             return values;
-        });
+        };
+        this.Options.Add(_modelsOption);
 
         this.SetAction(CommandHandler);
     }
@@ -106,10 +115,15 @@ internal class TranslateCommand : CommandBase
         await this._sessionManager.LoadSettingsAsync();
 
         var text = parseResult.GetValue(_textOption);
+        var mascotMode = parseResult.GetValue(_mascotOption);
 
         ConsoleUtility.WriteLine($"Translating the following text:\n\t\"{text}\"\n", ConsoleColor.Magenta);
 
         var models = parseResult.GetValue(_modelsOption);
+        if ((models == null || !models.Any()) && !string.IsNullOrEmpty(_sessionManager.CurrentSettings.Model))
+        {
+            models = new string[] { _sessionManager.CurrentSettings.Model };
+        }
 
         foreach (var model in models)
         {
@@ -120,7 +134,7 @@ internal class TranslateCommand : CommandBase
 
                 // Use the loading indicator with the API call
                 var result = await this._modelsService
-                    .CompleteAsync(model, text, this._sessionManager.GetGitHubToken(),
+                    .CompleteAsync(model, text, mascotMode, this._sessionManager.GetGitHubToken(),
                         this._sessionManager.CurrentSettings.Language, cancellationToken)
                     .WithLoadingIndicator(
                         message: $"Translating with {model}",

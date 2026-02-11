@@ -106,11 +106,12 @@ Translates a sentence as a Roman would speak it.
 
 **Usage:**
 ```bash
-PromptusMaximus translate --text "Your text here" [--model model1 model2]
+PromptusMaximus translate --text "Your text here" [--mascotMode] [--model model1 model2]
 ```
 
 **Options:**
 - `-t, --text` (required): The text to translate
+- `-mm, --mascotMode` (optional): Enable the mascot mode
 - `-m, --model` (optional): Models to use for translation. If not specified, uses the default model
 
 **Examples:**
@@ -123,6 +124,9 @@ PromptusMaximus translate --text "My code won't compile" --model gpt-4o gpt-3.5-
 
 # Using short form aliases
 PromptusMaximus translate -t "I'm stuck in traffic" -m gpt-4o
+
+# Using short form aliases with mascot mode
+PromptusMaximus translate -t "I'm stuck in traffic" -m gpt-4o -mm
 ```
 
 ### `models` - Manage GitHub Models

@@ -10,10 +10,15 @@ internal static class PromptFileUtility
     /// Retrieves the system prompt text for the specified language.
     /// </summary>
     /// <param name="language">The language for which to retrieve the system prompt.</param>
+    /// <param name="mascotMode">Indicates whether to enable mascot mode for the system prompt.</param>
     /// <returns>The system prompt text, or null if the file doesn't exist or cannot be read.</returns>
-    public static async Task<string?> GetSystemPromptAsync(Languages language)
+    public static async Task<string?> GetSystemPromptAsync(Languages language,bool mascotMode)
     {
-        var fileName = $"SystemPrompt_{language}.txt";
+        string fileName = null;
+        if (mascotMode) 
+            fileName=$"SystemPrompt_Mascot_{language}.txt";
+        else
+            fileName= $"SystemPrompt_{language}.txt";
         var filePath = Path.Combine(PromptsDirectory, fileName);
 
         try

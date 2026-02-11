@@ -6,7 +6,7 @@
     },
     "Set Credential": {
       "commandName": "Project",
-      "commandLineArgs": "set credential --token testtoken"
+      "commandLineArgs": "set credential --token AAA"
     },
     "Set Language": {
       "commandName": "Project",
@@ -31,6 +31,14 @@
     "Version": {
       "commandName": "Project",
       "commandLineArgs": "--version"
+    },
+    "Translate": {
+      "commandName": "Project",
+      "commandLineArgs": "translate --text \"I need coffee\""
+    },
+    "Translate_With_Mascot": {
+      "commandName": "Project",
+      "commandLineArgs": "translate --text \"I need coffee\" --mascotMode"
     }
   }
 }

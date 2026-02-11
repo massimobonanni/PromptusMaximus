@@ -35,9 +35,9 @@ Promptus Maximus is a satirical translation engine that turns everyday expressio
 
 ## 🐔 Mascot Mode (Optional but Highly Recommended)
 
-Enable **Mascot Mode** to let Loquatius and Marsellus deliver translations in character:
+Enable **Mascot Mode** to let Loquatius and Maximus deliver translations in character:
 - 🦆 *Loquatius*: A neurotic Roman Senator with caffeine dependency
-- 🦊 *Marsellus*: A battle-hardened General who commits with honor
+- 🦊 *Maximus*: A battle-hardened General who commits with honor
 
 ---
 

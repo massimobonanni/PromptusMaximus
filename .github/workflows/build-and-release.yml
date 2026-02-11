@@ -34,9 +34,11 @@ jobs:
           echo "Updating $csproj"
           if grep -q "<Version>" "$csproj"; then
             sed -i "s|<Version>.*</Version>|<Version>$VERSION</Version>|g" "$csproj"
+            sed -i "s|<FileVersion>.*</FileVersion>|<FileVersion>$VERSION</FileVersion>|g" "$csproj"
           else
             # Add Version element if it doesn't exist
             sed -i "s|</PropertyGroup>|  <Version>$VERSION</Version>\n  </PropertyGroup>|" "$csproj" || true
+            sed -i "s|</PropertyGroup>|  <FileVersion>$VERSION</FileVersion>\n  </PropertyGroup>|" "$csproj" || true
           fi
         done
 

@@ -95,6 +95,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Download Windows artifact
       uses: actions/download-artifact@v4
@@ -113,12 +115,28 @@ jobs:
       run: |
         echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+        
+        # Get previous release tag
+        PREVIOUS_TAG=$(git tag --sort=-version:refname | grep "^release-" | head -n 1)
+        
+        if [ -z "$PREVIOUS_TAG" ]; then
+          echo "No previous release found, using all commits"
+          COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges)
+        else
+          echo "Previous release: $PREVIOUS_TAG"
+          COMMITS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+        fi
+        
+        # Save commits to output (handle multiline)
+        echo "commits<<EOF" >> $GITHUB_OUTPUT
+        echo "$COMMITS" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: release-${{ steps.commit.outputs.timestamp }}
-        name: Release ${{ steps.commit.outputs.timestamp }}
+        tag_name: release-${{ needs.build-and-test.outputs.version }}
+        name: Release ${{ needs.build-and-test.outputs.version }}
         body: |
           Automated release from commit ${{ steps.commit.outputs.sha_short }}
           
@@ -129,7 +147,7 @@ jobs:
           - Linux (x64)
           
           **Changes:**
-          ${{ github.event.head_commit.message }}
+          ${{ steps.commit.outputs.commits }}
         files: |
           promptusmaximus-win-x64-${{ needs.build-and-test.outputs.version }}.zip
           promptusmaximus-linux-x64-${{ needs.build-and-test.outputs.version }}.zip

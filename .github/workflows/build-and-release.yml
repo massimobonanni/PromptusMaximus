@@ -56,10 +56,10 @@ jobs:
       continue-on-error: true
 
     - name: Publish PromptusMaximus.Console for Windows
-      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish-win -r win-x64 --self-contained true -p:PublishSingleFile=true
+      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish-win -r win-x64 
 
     - name: Publish PromptusMaximus.Console for Linux
-      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish-linux -r linux-x64 --self-contained true -p:PublishSingleFile=true
+      run: dotnet publish PromptusMaximus.Console/PromptusMaximus.Console.csproj --configuration Release --output ./publish-linux -r linux-x64 
 
     - name: Create Windows zip archive
       run: |

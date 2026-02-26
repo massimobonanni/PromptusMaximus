@@ -1,0 +1,57 @@
+# Promptus Maximus
+
+> A satirical .NET console application that transforms everyday modern phrases into theatrical, Latin-inspired proclamations using GitHub-hosted LLMs. Features mascot personalities, cross-platform credential storage, and dramatic flair worthy of the Roman Senate.
+
+Promptus Maximus is a multi-project .NET 9.0 solution demonstrating integration with GitHub Models API for AI-powered text translation. The application uses prompt engineering with theatrical Roman themes to reimagine mundane expressions as epic declarations, optionally delivered by character mascots (Loquatius the Senator or Maximus the General).
+
+**Key Technologies**: .NET 9.0, System.CommandLine, GitHub Models API, cross-platform data protection, async/await patterns
+
+**Architecture**: Clean architecture with three main components:
+- Console application (CLI interface with command-line parsing)
+- Core library (shared models, interfaces, session management, security)
+- GitHub Models Client (HTTP client for API communication)
+
+## Documentation
+
+- [Main README](README.md): Project overview, features, example translations, and getting started guide
+- [Console Application README](PromptusMaximus.Console/README.md): Complete CLI command reference including `set`, `translate`, and `models` commands with usage examples
+- [Core Library README](PromptusMaximus.Core/README.md): Architecture documentation, core models, interfaces, configuration management, and security services
+- [GitHub Models Client README](GitHubModels.Client/README.md): HTTP client architecture, API integration patterns, authentication, and error handling
+
+## Key Components
+
+- [Program.cs](PromptusMaximus.Console/Program.cs): Application entry point with dependency injection setup
+- [GitHubModelsClient.cs](GitHubModels.Client/Services/GitHubModelsClient.cs): HTTP client for GitHub Models Catalog API
+- [GitHubModelsService.cs](PromptusMaximus.Console/Services/GitHubModelsService.cs): Service layer for LLM interactions and prompt engineering
+- [SessionManager.cs](PromptusMaximus.Core/Configuration/SessionManager.cs): Session settings and configuration management
+- [RootCommand.cs](PromptusMaximus.Console/Commands/RootCommand.cs): Command-line interface root command definition
+- [TranslateCommand.cs](PromptusMaximus.Console/Commands/TranslateCommand.cs): Translation command implementation
+
+## Models and Interfaces
+
+- [GitHubModel.cs](PromptusMaximus.Core/Models/GitHubModel.cs): Data model for GitHub AI models
+- [GitHubModelCollection.cs](PromptusMaximus.Core/Models/GitHubModelCollection.cs): Collection with filtering capabilities for model catalog
+- [IModelsClient.cs](PromptusMaximus.Core/Interfaces/IModelsClient.cs): Interface for model catalog API operations
+- [IModelsService.cs](PromptusMaximus.Core/Interfaces/IModelsService.cs): Interface for AI completion services
+- [ISessionManager.cs](PromptusMaximus.Core/Interfaces/ISessionManager.cs): Interface for session and configuration management
+
+## Security and Configuration
+
+- [ProtectedDataProviderFactory.cs](PromptusMaximus.Core/Security/ProtectedDataProviderFactory.cs): Cross-platform factory for data protection
+- [WindowsProtectedDataProvider.cs](PromptusMaximus.Core/Security/WindowsProtectedDataProvider.cs): Windows DPAPI implementation
+- [LinuxProtectedDataProvider.cs](PromptusMaximus.Core/Security/LinuxProtectedDataProvider.cs): Linux encryption implementation
+- [SessionSettings.cs](PromptusMaximus.Core/Configuration/SessionSettings.cs): Session configuration data model
+- [Languages.cs](PromptusMaximus.Core/Configuration/Languages.cs): Language enumeration for internationalization
+
+## Prompts
+
+- [SystemPrompt_EN.txt](PromptusMaximus.Console/Prompts/SystemPrompt_EN.txt): English system prompt for theatrical translation
+- [SystemPrompt_IT.txt](PromptusMaximus.Console/Prompts/SystemPrompt_IT.txt): Italian system prompt for theatrical translation
+- [SystemPrompt_Mascot_EN.txt](PromptusMaximus.Console/Prompts/SystemPrompt_Mascot_EN.txt): English mascot personality prompt
+- [SystemPrompt_Mascot_IT.txt](PromptusMaximus.Console/Prompts/SystemPrompt_Mascot_IT.txt): Italian mascot personality prompt
+
+## Optional
+
+- [Project Solution File](PromptusMaximus.sln): Visual Studio solution configuration
+- [PowerShell Management Script](Manage-ProfileCommands.ps1): PowerShell profile integration utilities
+- [Test Project](Tests/PromptusMaximus.Core.Tests/PromptusMaximus.Core.Tests.csproj): Unit tests for core library components

@@ -1,4 +1,4 @@
-# 🏛️ Promptus Maximus Console (New Version)
+# 🏛️ Promptus Maximus Console
 
 **The command-line interface for speaking like Caesar and debugging like a gladiator.**
 

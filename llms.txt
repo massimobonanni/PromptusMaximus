@@ -2,9 +2,9 @@
 
 > A satirical .NET console application that transforms everyday modern phrases into theatrical, Latin-inspired proclamations using GitHub-hosted LLMs. Features mascot personalities, cross-platform credential storage, and dramatic flair worthy of the Roman Senate.
 
-Promptus Maximus is a multi-project .NET 9.0 solution demonstrating integration with GitHub Models API for AI-powered text translation. The application uses prompt engineering with theatrical Roman themes to reimagine mundane expressions as epic declarations, optionally delivered by character mascots (Loquatius the Senator or Maximus the General).
+Promptus Maximus is a multi-project .NET 10.0 solution demonstrating integration with GitHub Models API for AI-powered text translation. The application uses prompt engineering with theatrical Roman themes to reimagine mundane expressions as epic declarations, optionally delivered by character mascots (Loquatius the Senator or Maximus the General).
 
-**Key Technologies**: .NET 9.0, System.CommandLine, GitHub Models API, cross-platform data protection, async/await patterns
+**Key Technologies**: .NET 10.0, System.CommandLine, GitHub Models API, cross-platform data protection, async/await patterns
 
 **Architecture**: Clean architecture with three main components:
 - Console application (CLI interface with command-line parsing)

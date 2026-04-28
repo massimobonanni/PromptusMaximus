@@ -99,6 +99,10 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        fetch-tags: true
+
+    - name: Fetch tags
+      run: git fetch --tags --force
 
     - name: Download Windows artifact
       uses: actions/download-artifact@v4
@@ -118,8 +122,15 @@ jobs:
         echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
         
-        # Get previous release tag
-        PREVIOUS_TAG=$(git tag --sort=-version:refname | grep "^release-" | head -n 1)
+        CURRENT_TAG="release-${{ needs.build-and-test.outputs.version }}"
+        echo "Current release tag: $CURRENT_TAG"
+        
+        # List all release tags (for diagnostics) and find the previous one,
+        # excluding the tag being created in this run (in case of re-run).
+        echo "Available release tags:"
+        git tag --sort=-version:refname | grep "^release-" || echo "(none)"
+        
+        PREVIOUS_TAG=$(git tag --sort=-version:refname | grep "^release-" | grep -v "^${CURRENT_TAG}$" | head -n 1)
         
         if [ -z "$PREVIOUS_TAG" ]; then
           echo "No previous release found, using all commits"

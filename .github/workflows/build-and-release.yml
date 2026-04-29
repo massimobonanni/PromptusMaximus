@@ -20,7 +20,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Fetch tags
+      run: git fetch --tags --force
 
     - name: Update project versions
       id: version
@@ -130,7 +133,8 @@ jobs:
         git tag --sort=-version:refname | grep "^release-" || echo "(none)"
         
         PREVIOUS_TAG=$(git tag --sort=-version:refname | grep "^release-" | grep -v "^${CURRENT_TAG}$" | head -n 1)
-        
+        echo "Previous tag: $PREVIOUS_TAG"
+
         if [ -z "$PREVIOUS_TAG" ]; then
           echo "No previous release found, using all commits"
           COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges)

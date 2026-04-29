@@ -1,4 +1,4 @@
-# 🏛️ Promptus Maximus - Demo
+# 🏛️ Promptus Maximus
 
 **Speak like Caesar. Complain like Cicero. Debug like a gladiator.**
 

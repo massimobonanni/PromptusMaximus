@@ -35,7 +35,8 @@ public class GitHubModelsClient : IDisposable, IModelsClient
     /// <param name="httpClient">The HttpClient to use for requests.</param>
     public GitHubModelsClient(HttpClient httpClient)
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        ArgumentNullException.ThrowIfNull(httpClient, nameof(httpClient));
+        _httpClient = httpClient;
         _disposeHttpClient = false;
 
         // Set default headers that don't change between requests
@@ -58,8 +59,7 @@ public class GitHubModelsClient : IDisposable, IModelsClient
     /// <exception cref="OperationCanceledException">Thrown when the operation is cancelled.</exception>
     public async Task<GitHubModelCollection> GetModelsAsync(string ghToken, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(ghToken))
-            throw new ArgumentException("GitHub token cannot be null or empty.", nameof(ghToken));
+        ArgumentNullException.ThrowIfNull(ghToken, nameof(ghToken));
 
         try
         {

@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PromptusMaximus.Core.Configuration;
-using Azure;
+﻿using Azure;
 using Azure.AI.Inference;
 using PromptusMaximus.Console.Utilities;
-using System.Net.Http;
-using System.Net;
+using PromptusMaximus.Core.Configuration;
 using PromptusMaximus.Core.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.CommandLine;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PromptusMaximus.Console.Services;
 
@@ -54,15 +55,9 @@ internal class GitHubModelsService : IModelsService
     public async Task<string> CompleteAsync(string modelName, string prompt, bool mascotMode, string ghToken,
         Languages language, CancellationToken cancellationToken)
     {
-        // Input validation
-        if (string.IsNullOrWhiteSpace(modelName))
-            throw new ArgumentException("Model name cannot be null or empty.", nameof(modelName));
-
-        if (string.IsNullOrWhiteSpace(prompt))
-            throw new ArgumentException("Prompt cannot be null or empty.", nameof(prompt));
-
-        if (string.IsNullOrWhiteSpace(ghToken))
-            throw new ArgumentException("GitHub token cannot be null or empty.", nameof(ghToken));
+        ArgumentException.ThrowIfNullOrWhiteSpace(modelName, nameof(modelName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(prompt, nameof(prompt));
+        ArgumentException.ThrowIfNullOrWhiteSpace(ghToken, nameof(ghToken));
 
         var credential = new Azure.AzureKeyCredential(ghToken);
 
@@ -72,7 +67,7 @@ internal class GitHubModelsService : IModelsService
             new AzureAIInferenceClientOptions()
         );
 
-        var systemPrompt = await PromptFileUtility.GetSystemPromptAsync(language,mascotMode);
+        var systemPrompt = await PromptFileUtility.GetSystemPromptAsync(language, mascotMode);
 
         var requestOptions = new ChatCompletionsOptions()
         {

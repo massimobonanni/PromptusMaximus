@@ -60,11 +60,6 @@ public class SessionManager : ISessionManager
     private SessionSettings _currentSettings = new();
 
     /// <summary>
-    /// Gets the current session settings.
-    /// </summary>
-    public SessionSettings CurrentSettings => _currentSettings;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="SessionManager"/> class using the default protected data provider.
     /// </summary>
     public SessionManager() : this(ProtectedDataProviderFactory.Create())

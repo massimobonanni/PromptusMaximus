@@ -96,12 +96,13 @@ public class LinuxProtectedDataProvider : IProtectedDataProvider
         }
 
         // Use PBKDF2 to derive a key
-        using var pbkdf2 = new Rfc2898DeriveBytes(
+        var key = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(keyMaterial.ToString()),
             Encoding.UTF8.GetBytes("PromptusMaximus.Salt"), // Static salt
             100000, // Iterations
-            HashAlgorithmName.SHA256);
+            HashAlgorithmName.SHA256,
+            KeySize);
 
-        return Task.FromResult(pbkdf2.GetBytes(KeySize));
+        return Task.FromResult(key);
     }
 }

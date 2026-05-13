@@ -74,7 +74,7 @@ internal class TranslateCommand : CommandBase
         {
             var value = result.GetValue(_modelsOption);
             if ((value == null || !value.Any() || value.All(string.IsNullOrWhiteSpace)) &&
-                string.IsNullOrWhiteSpace(sessionManager.CurrentSettings.Model))
+                string.IsNullOrWhiteSpace(sessionManager.GetModel()))
             {
                 result.AddError("At least one model must be specified using --model option or a default model must be set in settings.");
             }
@@ -120,9 +120,9 @@ internal class TranslateCommand : CommandBase
         ConsoleUtility.WriteLine($"Translating the following text:\n\t\"{text}\"\n", ConsoleColor.Magenta);
 
         var models = parseResult.GetValue(_modelsOption);
-        if ((models == null || !models.Any()) && !string.IsNullOrEmpty(_sessionManager.CurrentSettings.Model))
+        if ((models == null || !models.Any()) && !string.IsNullOrEmpty(_sessionManager.GetModel()))
         {
-            models = new string[] { _sessionManager.CurrentSettings.Model };
+            models = new string[] { _sessionManager.GetModel() };
         }
 
         foreach (var model in models)
@@ -135,7 +135,7 @@ internal class TranslateCommand : CommandBase
                 // Use the loading indicator with the API call
                 var result = await this._modelsService
                     .CompleteAsync(model, text, mascotMode, this._sessionManager.GetGitHubToken(),
-                        this._sessionManager.CurrentSettings.Language, cancellationToken)
+                        this._sessionManager.GetLanguage(), cancellationToken)
                     .WithLoadingIndicator(
                         message: $"Translating with {model}",
                         style: LoadingIndicator.Style.Spinner,

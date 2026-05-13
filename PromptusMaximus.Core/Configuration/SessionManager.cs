@@ -260,4 +260,22 @@ public class SessionManager : ISessionManager
     {
         return GetSecret("github_token");
     }
+
+    /// <summary>
+    /// Gets the model identifier for the current session.
+    /// </summary>
+    /// <returns>The model identifier if set; otherwise, null.</returns>
+    public string? GetModel()
+    {
+        return _currentSettings.Model;
+    }
+
+    /// <summary>
+    /// Gets the language setting for the current session.
+    /// </summary>
+    /// <returns>The current <see cref="Languages"/> value.</returns>
+    public Languages GetLanguage()
+    {
+        return _currentSettings.Language;
+    }
 }

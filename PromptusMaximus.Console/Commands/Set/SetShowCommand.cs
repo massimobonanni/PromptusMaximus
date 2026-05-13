@@ -30,8 +30,8 @@ internal class SetShowCommand : CommandBase
     private async Task CommandHandler(ParseResult parseResult, CancellationToken cancellationToken)
     {
         await this._sessionManager.LoadSettingsAsync();
-        System.Console.WriteLine($"Default model : {this._sessionManager.CurrentSettings.Model}");
-        System.Console.WriteLine($"Default language : {this._sessionManager.CurrentSettings.Language}");
+        System.Console.WriteLine($"Default model : {this._sessionManager.GetModel()}");
+        System.Console.WriteLine($"Default language : {this._sessionManager.GetLanguage()}");
 
         var token = this._sessionManager.GetGitHubToken();
 

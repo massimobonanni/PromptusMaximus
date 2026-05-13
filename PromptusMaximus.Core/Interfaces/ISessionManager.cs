@@ -7,11 +7,6 @@ namespace PromptusMaximus.Core.Interfaces;
 /// </summary>
 public interface ISessionManager
 {
-    /// <summary>
-    /// Gets the current session settings containing model, language, and custom configurations.
-    /// </summary>
-    /// <value>The current <see cref="SessionSettings"/> instance with all loaded configuration values.</value>
-    SessionSettings CurrentSettings { get; }
 
     /// <summary>
     /// Clears all session settings and optionally deletes the associated configuration files.
@@ -83,4 +78,16 @@ public interface ISessionManager
     /// <param name="key">The key to identify the setting.</param>
     /// <param name="value">The setting value to store.</param>
     void SetSetting(string key, string value);
+
+    /// <summary>
+    /// Retrieves the AI model identifier configured for the current session.
+    /// </summary>
+    /// <returns>The model name or identifier if set; otherwise, <c>null</c>.</returns>
+    public string? GetModel();
+
+    /// <summary>
+    /// Retrieves the language preference configured for the current session.
+    /// </summary>
+    /// <returns>The current <see cref="Languages"/> value for the session.</returns>
+    public Languages GetLanguage();
 }
